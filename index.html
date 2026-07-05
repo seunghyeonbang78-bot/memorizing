@@ -3,20 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>My Vocabulary</title>
 
 <style>
-
 body{
     font-family:Arial, sans-serif;
     background:#f4f6f8;
     margin:40px;
 }
 
-h1{
-    text-align:center;
-}
+h1{text-align:center;}
 
 .container{
     max-width:700px;
@@ -48,15 +44,8 @@ button{
     margin:5px;
 }
 
-.add{
-    background:#2196F3;
-    color:white;
-}
-
-.clear{
-    background:#f44336;
-    color:white;
-}
+.add{background:#2196F3;color:white;}
+.clear{background:#f44336;color:white;}
 
 .word{
     background:white;
@@ -78,138 +67,33 @@ button{
     color:#1565c0;
     font-size:20px;
 }
-
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
-
 <h1>📖 My Vocabulary</h1>
 
 <div class="card">
-
 <label>영어 단어</label>
-
-<input
-id="english"
-placeholder="예) abnormal">
+<input id="english" placeholder="예) abnormal">
 
 <label>뜻</label>
+<input id="korean" placeholder="예) 비정상적인">
 
-<input
-id="korean"
-placeholder="예) 비정상적인">
-
-<button class="add" onclick="addWord()">
-➕ 단어 추가
-</button>
-
-<button class="clear" onclick="deleteAll()">
-🗑 전체 삭제
-</button>
-
+<button class="add" onclick="addWord()">➕ 단어 추가</button>
+<button class="clear" onclick="deleteAll()">🗑 전체 삭제</button>
 </div>
 
 <div id="wordList"></div>
-
 </div>
 
 <script>
 
-let words = JSON.parse(localStorage.getItem("words")) || [];
-
-function save(){
-    localStorage.setItem("words",JSON.stringify(words));
-}
-
-function draw(){
-
-const list=document.getElementById("wordList");
-
-list.innerHTML="";
-
-words.forEach((word,index)=>{
-
-const div=document.createElement("div");
-
-div.className="word";
-
-div.innerHTML=`
-<div class="english">${word.english}</div>
-
-<div class="korean">${word.korean}</div>
-`;
-
-div.onclick=function(){
-
-const meaning=div.querySelector(".korean");
-
-if(meaning.style.display=="block"){
-meaning.style.display="none";
-}
-else{
-meaning.style.display="block";
-}
-
-}
-
-list.appendChild(div);
-
-});
-
-}
-
-function addWord(){
-
-const english=document.getElementById("english").value.trim();
-
-const korean=document.getElementById("korean").value.trim();
-
-if(english=="" || korean==""){
-alert("영어와 뜻을 모두 입력하세요.");
-return;
-}
-
-words.push({
-english,
-korean
-});
-
-save();
-
-draw();
-
-document.getElementById("english").value="";
-document.getElementById("korean").value="";
-
-}
-
-function deleteAll(){
-
-if(confirm("모든 단어를 삭제할까요?")){
-
-words=[];
-
-save();
-
-draw();
-
-}
-
-}
-
-draw();
-
-</script>
-
-</body>
-</html>
-
-
-[
+// 🔥 여기 핵심: 처음 데이터 자동 세팅
+if (!localStorage.getItem("words")) {
+    const defaultWords = [
   {"english":"apex","korean":"정점, 최고점"},
   {"english":"atypical","korean":"전형적이지 않은, 이례적인"},
   {"english":"avenge","korean":"복수하다"},
@@ -760,4 +644,68 @@ draw();
   {"english":"static","korean":"정적인, 변화 없는"},
   {"english":"sustenance","korean":"생존에 필요한 음식, 생계"},
   {"english":"trifling","korean":"사소한, 하찮은"}
-]
+];
+
+    localStorage.setItem("words", JSON.stringify(defaultWords));
+}
+
+let words = JSON.parse(localStorage.getItem("words"));
+
+function save(){
+    localStorage.setItem("words", JSON.stringify(words));
+}
+
+function draw(){
+    const list = document.getElementById("wordList");
+    list.innerHTML = "";
+
+    words.forEach((word)=>{
+        const div = document.createElement("div");
+        div.className = "word";
+
+        div.innerHTML = `
+            <div class="english">${word.english}</div>
+            <div class="korean">${word.korean}</div>
+        `;
+
+        div.onclick = function(){
+            const meaning = div.querySelector(".korean");
+            meaning.style.display =
+                meaning.style.display === "block" ? "none" : "block";
+        };
+
+        list.appendChild(div);
+    });
+}
+
+function addWord(){
+    const english = document.getElementById("english").value.trim();
+    const korean = document.getElementById("korean").value.trim();
+
+    if(!english || !korean){
+        alert("둘 다 입력해야 됨");
+        return;
+    }
+
+    words.push({english, korean});
+    save();
+    draw();
+
+    document.getElementById("english").value = "";
+    document.getElementById("korean").value = "";
+}
+
+function deleteAll(){
+    if(confirm("진짜 다 삭제?")){
+        words = [];
+        save();
+        draw();
+    }
+}
+
+draw();
+
+</script>
+
+</body>
+</html>
