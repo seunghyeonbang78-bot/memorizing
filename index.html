@@ -91,7 +91,7 @@ button{
 
 <script>
 
-// 🔥 여기 핵심: 처음 데이터 자동 세팅
+// 🔥 초기 데이터 세팅
 if (!localStorage.getItem("words")) {
     const defaultWords = [
   {"english":"apex","korean":"정점, 최고점"},
@@ -625,7 +625,7 @@ if (!localStorage.getItem("words")) {
   {"english":"static","korean":"정적인, 변화 없는"},
   {"english":"sustenance","korean":"생존에 필요한 음식, 생계"},
   {"english":"trifling","korean":"사소한, 하찮은"}
-];
+    ];
 
     localStorage.setItem("words", JSON.stringify(defaultWords));
 }
